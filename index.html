@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Une surprise spéciale ❤️</title>
+  <!-- Google Fonts & Canvas Confetti -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%);
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Arrière-plan cœurs flottants */
+    .bg-heart {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 20px;
+      animation: float 6s infinite linear;
+      bottom: -30px;
+      z-index: 1;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-105vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Carte Style Glassmorphism */
+    .card {
+      position: relative;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      padding: 40px 30px;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      transition: all 0.5s ease;
+    }
+
+    h1 {
+      color: #d63384;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .cursive {
+      font-family: 'Great Vibes', cursive;
+      font-size: 2.8rem;
+      color: #e63946;
+    }
+
+    p {
+      color: #4a4a4a;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    /* Bouton interactif */
+    .btn-reveal {
+      padding: 16px 36px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(45deg, #ff4d6d, #ff758f);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(255, 77, 109, 0.35);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      outline: none;
+    }
+
+    .btn-reveal:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 25px rgba(255, 77, 109, 0.45);
+    }
+
+    .btn-reveal:active {
+      transform: translateY(1px);
+    }
+
+    /* Animation de la section surprise */
+    #surprise {
+      display: none;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    #surprise.show {
+      display: block;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .emoji-group {
+      font-size: 3rem;
+      margin-top: 15px;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Étape 1 : Intro -->
+  <div class="card" id="step1">
+    <h1>Hey toi ❤️</h1>
+    <p>J'ai préparé une petite surprise spéciale juste pour toi...</p>
+    <button class="btn-reveal" onclick="showSurprise()">Découvrir 🎁</button>
+  </div>
+
+  <!-- Étape 2 : Surprise -->
+  <div class="card" id="surprise">
+    <h1 class="cursive">Joyeux Anniversaire mon BB 🎂✨</h1>
+    <p>Je te souhaite la santé et plein de succès.<br>Fête bien ❤️</p>
+    <div class="emoji-group">🎉💖🎂</div>
+  </div>
+
+  <script>
+    // Génération automatique des cœurs flottants
+    function createBgHearts() {
+      for (let i = 0; i < 15; i++) {
+        let heart = document.createElement('div');
+        heart.className = 'bg-heart';
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+        heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+        document.body.appendChild(heart);
+      }
+    }
+    createBgHearts();
+
+    // Fonction de révélation avec animation Confetti / Cœurs
+    function showSurprise() {
+      const step1 = document.getElementById('step1');
+      const surprise = document.getElementById('surprise');
+
+      step1.style.opacity = '0';
+      step1.style.transform = 'scale(0.8)';
+      
+      setTimeout(() => {
+        step1.style.display = 'none';
+        surprise.classList.add('show');
+        
+        // Pluie de confettis et cœurs (via Canvas-Confetti)
+        let duration = 3 * 1000;
+        let end = Date.now() + duration;
+
+        (function frame() {
+          confetti({
+            particleCount: 5,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0 },
+            colors: ['#ff4d6d', '#ff758f', '#ffffff']
+          });
+          confetti({
+            particleCount: 5,
+            angle: 120,
+            spread: 55,
+            origin: { x: 1 },
+            colors: ['#ff4d6d', '#ff758f', '#ffffff']
+          });
+
+          if (Date.now() < end) {
+            requestAnimationFrame(frame);
+          }
+        })();
+      }, 400);
+    }
+  </script>
+</body>
+</html>
